@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
 import Header from "../components/header/header";
+import { Outlet, useNavigate } from 'react-router-dom';
 
-const Layout = () => {
+const Layout: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -10,13 +10,13 @@ const Layout = () => {
     const password = localStorage.getItem("password");
 
     if (!username || !password) {
-      navigate("/"); 
+      navigate("/");
     }
   }, [navigate]);
 
   return (
     <div className="container flex">
-      <Header />  
+      <Header />
       <Outlet />
     </div>
   );
