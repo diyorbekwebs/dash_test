@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
-
-interface FormDataType {
-  name: string;
-  price: string;
-  image: string;
-  category: string;
-  desc: string;
-}
+import { useAddProductMutation } from "../../app/features/productApi";
 
 export default function Create() {
-  const [formData, setFormData] = useState<FormDataType>({
+  const [formData, setFormData] = useState({
     name: "",
     price: "",
     image: "",
@@ -18,26 +10,25 @@ export default function Create() {
     desc: "",
   });
 
+  const [addProduct] = useAddProductMutation();
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://67e467d12ae442db76d4529c.mockapi.io/Products",
-        formData
-      );
-      console.log("Submitted Data:", response.data);
-      alert("Muvaffaqiyatli qo'shildi !");
+      await addProduct({ ...formData, price: Number(formData.price) }).unwrap();
+      alert("Muvaffaqiyatli qo'shildi!");
       setFormData({ name: "", price: "", image: "", category: "", desc: "" });
     } catch (error) {
-      console.error("Error :", error);
+      console.error("Xatolik:", error);
     }
   };
+  
 
   return (
     <div className="w-full pt-[22px] pl-[32px] ml-[400px] p-4 flex flex-col gap-4">

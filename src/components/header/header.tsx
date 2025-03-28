@@ -63,7 +63,7 @@ export default function Header() {
 
       {/* Logout Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-[#000000aa] backdrop-blur-sm bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center w-[300px] animate-fade-in">
             <h2 className="text-xl font-semibold mb-4">Dashboarddan chiqasizmi?</h2>
             <div className="flex justify-center gap-4">

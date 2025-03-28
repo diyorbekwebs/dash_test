@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import { Edit2, Trash } from "../../assets/imgs/img";
-import axios from "axios";
+import { Product } from "../../app/features/productApi";
 
 interface CardProps {
   id: string;
   name: string;
-  price: string;
+  price: number;
   image: string;
   desc: string;
-  deletefunc: (id: string) => void;
-  updatefunc: (
-    id: string,
-    updatedProduct: { name?: string; price?: string }
-  ) => void;
+  deletefunc: () => void;
+  updatefunc: (updatedData: Partial<Product>) => void; // ✅ Endi xato chiqmaydi
 }
 
 const Card: React.FC<CardProps> = ({
@@ -28,38 +25,18 @@ const Card: React.FC<CardProps> = ({
   const [newName, setNewName] = useState(name);
   const [newPrice, setNewPrice] = useState(price);
 
-  const handleDelete = async () => {
-    if (window.confirm(`Delete product with id: ${id}?`)) {
-      try {
-        await axios.delete(
-          `https://67e467d12ae442db76d4529c.mockapi.io/Products/${id}`
-        );
-        deletefunc(id);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      await axios.put(
-        `https://67e467d12ae442db76d4529c.mockapi.io/Products/${id}`,
-        {
-          name: newName,
-          price: newPrice,
-        }
-      );
-      updatefunc(id, { name: newName, price: newPrice });
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating product:", error);
-    }
+  const handleSave = () => {
+    updatefunc({ name: newName, price: newPrice });
+    setIsEditing(false);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-[32px] pt-[11px] pb-[28px] pr-[16px] pl-[27px]">
-      <img className="w-[173px] h-[216px] rounded-lg" src={image} alt={name} />
+    <div className="flex  flex-col items-center justify-center gap-[32px] pt-[11px] pb-[28px] pr-[16px] pl-[27px]">
+      <img
+        className="w-[173px] h-[216px] rounded-lg"
+        src="https://frankfurt.apollo.olxcdn.com/v1/files/79ronmamp42f-UZ/image;s=800x800"
+        alt={name}
+      />
       <div className="flex flex-col items-start gap-[24px]">
         {!isEditing ? (
           <>
@@ -81,7 +58,7 @@ const Card: React.FC<CardProps> = ({
                   <img src={Edit2} alt="Edit" />
                 </button>
                 <button
-                  onClick={handleDelete}
+                  onClick={deletefunc}
                   className="w-[55px] h-[33px] py-[5px] px-[15px] bg-[#454545] cursor-pointer rounded-[100px]"
                 >
                   <img src={Trash} alt="Delete" />
@@ -100,7 +77,7 @@ const Card: React.FC<CardProps> = ({
             <input
               type="text"
               value={newPrice}
-              onChange={(e) => setNewPrice(e.target.value)}
+              onChange={(e) => setNewPrice(Number(e.target.value))}
               className="w-[227px] p-2 border border-gray-300 rounded-md outline-none focus:border-blue-500 transition-all"
             />
             <button
